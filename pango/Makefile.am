@@ -159,8 +159,8 @@ pango_introspection_files = \
         $(libpango_1_0_la_SOURCES) \
 	    $(pango_headers) \
 	    pango-enum-types.h
-Pango-1.0.gir: libpango-1.0.la
 
+Pango-1.0.gir: libpango-1.0.la Makefile
 Pango_1_0_gir_PACKAGES = gobject-2.0 cairo freetype2
 Pango_1_0_gir_EXPORT_PACKAGES = pango
 Pango_1_0_gir_INCLUDES = GObject-2.0 cairo-1.0
@@ -228,9 +228,8 @@ pangoft2_introspection_files = \
         $(pangoft2_headers) \
         $(pangoft2_public_sources)
 
-PangoFT2-1.0.gir: libpangoft2-1.0.la
+PangoFT2-1.0.gir: libpangoft2-1.0.la Makefile
 PangoFT2-1.0.gir: Pango-1.0.gir
-
 PangoFT2_1_0_gir_PACKAGES = freetype2
 PangoFT2_1_0_gir_EXPORT_PACKAGES = pangoft2
 PangoFT2_1_0_gir_INCLUDES = GObject-2.0 cairo-1.0 freetype2-2.0 fontconfig-2.0
@@ -279,7 +278,7 @@ pangoxft_introspection_files = \
     $(pangoxft_headers) \
     $(libpangoxft_1_0_la_SOURCES)
 
-PangoXft-1.0.gir: libpangoxft-1.0.la
+PangoXft-1.0.gir: libpangoxft-1.0.la Makefile
 PangoXft-1.0.gir: Pango-1.0.gir PangoFT2-1.0.gir
 
 PangoXft_1_0_gir_PACKAGES = gobject-2.0 freetype2
@@ -367,9 +366,11 @@ pangocairo_introspection_files = \
     $(libpangocairo_1_0_la_SOURCES) \
     $(pangocairo_headers)
 
-PangoCairo-1.0.gir: libpangocairo-1.0.la
-PangoCairo-1.0.gir: Pango-1.0.gir $(PANGOCAIRO_FONT_BACKEND_GI_MODULE).gir
-
+if HAVE_WIN32
+PangoCairo-1.0.gir: libpangowin32-1.0.la libpangocairo-1.0.la Pango-1.0.gir $(PANGOCAIRO_FONT_BACKEND_GI_MODULE).gir Makefile
+else:
+PangoCairo-1.0.gir: libpangocairo-1.0.la Pango-1.0.gir $(PANGOCAIRO_FONT_BACKEND_GI_MODULE).gir Makefile
+endif
 PangoCairo_1_0_gir_PACKAGES = gobject-2.0 cairo
 PangoCairo_1_0_gir_EXPORT_PACKAGES = pangocairo
 PangoCairo_1_0_gir_INCLUDES = GObject-2.0 cairo-1.0
