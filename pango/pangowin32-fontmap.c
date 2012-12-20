@@ -30,6 +30,8 @@
 #include <string.h>
 #include <errno.h>
 
+#include <glib.h>
+
 #include "pango-fontmap.h"
 #include "pango-impl-utils.h"
 #include "pangowin32-private.h"
@@ -434,8 +436,6 @@ handle_alias_line (GString  *line_buffer,
   g_string_free (tmp_buffer2, TRUE);
 }
 
-#ifdef HAVE_CAIRO_WIN32
-
 static const char * const builtin_aliases[] = {
   "courier = \"courier new\"",
   "\"segoe ui\" = \"segoe ui,meiryo,malgun gothic,microsoft jhenghei,microsoft yahei,gisha,leelawadee,arial unicode ms,browallia new,mingliu,simhei,gulimche,ms gothic,sylfaen,kartika,latha,mangal,raavi\"",
@@ -557,7 +557,7 @@ lookup_aliases (const char   *fontname,
   struct PangoAlias *alias;
 
   if (pango_aliases_ht == NULL)
-    load_aliases ();
+    pango_load_aliases ();
 
   alias_key.alias = g_ascii_strdown (fontname, -1);
   alias = g_hash_table_lookup (pango_aliases_ht, &alias_key);
